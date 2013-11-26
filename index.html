@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <!-- Slide meta data, remove/edit as you see fit -->
+    <title>Introducción a Ruby on Rails</title>
+    <meta name="author" content="Joaquín Vicente" />
+    <meta name="email" content="joakin@gmail.com" />
+    <meta name="date" content="2013-11-24" />
+    <!-- Slippy core file and dependencies -->
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="jquery.history.js"></script>
+    <script type="text/javascript" src="custom.js"></script>
+    <script type="text/javascript" src="slippy-0.9.0.js"></script>
+    <!-- Slippy structural styles -->
+    <link type="text/css" rel="stylesheet" href="slippy-0.9.0.css"/>
+    <!-- Slippy theme -->
+    <link type="text/css" rel="stylesheet" href="slippy-kerryb.css"/>
+    <!-- Syntax highlighting -->
+    <script type="text/javascript" src="highlighter/shCore.js"></script>
+    <script type="text/javascript" src="highlighter/shBrushBash.js"></script>
+    <script type="text/javascript" src="highlighter/shBrushRuby.js"></script>
+    <script type="text/javascript" src="highlighter/shBrushPlain.js"></script>
+    <link type="text/css" rel="stylesheet" href="highlighter/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="highlighter/shThemeEclipse.css"/>
+    <!-- Slippy init code -->
+    <script type="text/javascript">
+      $(function() {
+          $(".slide").slippy({
+          });
+          SyntaxHighlighter.all();
+          });
+    </script>
+    <style type="text/css">
+    .small, .small li {
+      font-size: 1.2em;
+    }
+    </style>
+  </head>
+  <body>
+    
+    <div class="slide">
+      <h1>Intro a Ruby on Rails</h1>
+      <div class="center"><img src="images/rails.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>¿Qué es Ruby on Rails?</h1>
+      <blockquote><em>
+        "Ruby on Rails is an open-source web framework that's optimized for programmer happiness and sustainable productivity. It lets you write beautiful code by favoring convention over configuration"
+      </em></blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Ruby on Rails</h1>
+      <h2>Conceptos</h2>
+      <ul>
+        <li>Full-stack framework<br/> MVC + ORM + Web Server</li>
+        <li>Opinionated software:<br/> <em>"The Rails Way"</em></li>
+        <li>Don't Repeat Yourself (DRY)</li>
+        <li>Convention Over Configuration</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <h1>Estructura</h1>
+      <div>
+        <pre class="small brush: plain">
+          |-- app/
+          |    |-- assets/
+          |    |-- controllers/
+          |    |-- helpers/
+          |    |-- mailers/
+          |    |-- models/
+          |    |-- views/
+          |-- bin/
+          |-- config/
+          |    |-- environments/
+          |    | database.yml
+          |    | routes.rb
+          |-- db/
+          |    |-- migrate/
+          |-- lib/
+          |    |-- tasks/
+          |-- log/
+          |-- public/
+          |-- test/
+          |-- tmp/
+          |-- vendor/
+          | .gitignore
+          | config.ru
+          | Gemfile
+          | Gemfile.lock
+          | README.rdoc
+          | Rakefile
+        </pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Active Record</h1>
+      <h2>Object-Relational Mapping</h2>
+
+      <div>
+        <pre class="brush: ruby">
+          class Post &lt; ActiveRecord::Base
+            belongs_to :user
+            has_many :comments
+
+            validates :title, presence: true
+          end
+
+
+          post = Post.find(1)
+          post.title = "Nuevo titulo"
+          post.save
+        </pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Model View Controller</h1>
+      <div class="center"><img src="images/mvc.png" width="60%" height="60%"></div>
+    </div>
+
+    <div class="slide">
+      <h1>RESTful services</h1>
+      <ul>
+        <li>CRUD (ABM): Create, Retrieve, Update, Delete</li>
+        <li>SQL: Insert, Select, Update, Delete</li>
+        <li>HTTP: Post, Get, Patch/Put, Delete</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <h1>RESTful services</h1>
+      <div class="center"><img src="images/restful.png"></div>
+    </div>
+
+
+    <div class="slide">
+      <h1>Testing</h1>
+      <p>Environments independientes:</p>
+      <pre class="brush: plain">
+       * Development
+       * Test
+       * Production
+      </pre>
+      <p>Testing desde el Día Uno</p>
+      <pre class="brush: plain">
+        $ rails new app_name
+        ...
+
+        test/
+         |-- controllers/
+         |-- fixtures/
+         |-- helpers/
+         |-- integration/
+         |-- mailers/
+         |-- models/
+      </pre>
+    </div>
+
+
+    <div class="slide">
+      <h1>Migraciones</h1>
+      <ul>
+        <li>Manejar el schema de la BD de manera controlada</li>
+        <li>Permite versionar la BD junto al resto del proyecto</li>
+      </ul>
+      <pre class="small brush: plain">
+        $ rails g migration create_posts title:string body:text published:boolean
+      </pre>
+      <pre class="small brush: ruby">
+      class CreatePosts &lt; ActiveRecord::Migration
+        def change
+          create_table :posts do |t|
+            t.string :title
+            t.text :body
+            t.boolean :published
+
+            t.timestamps
+          end
+        end
+      end
+      </pre>
+
+    </div>
+
+    <div class="slide">
+      <h1>Generators</h1>
+      <pre class="small brush: plain">
+        $ rails g resource post title:string body:text published:boolean
+
+        invoke  active_record
+        create    db/migrate/20131126150525_create_posts.rb
+        create    app/models/post.rb
+        invoke    test_unit
+        create      test/models/post_test.rb
+        create      test/fixtures/posts.yml
+        invoke  controller
+        create    app/controllers/posts_controller.rb
+        invoke    erb
+        create      app/views/posts
+        invoke    test_unit
+        create      test/controllers/posts_controller_test.rb
+        invoke    helper
+        create      app/helpers/posts_helper.rb
+        invoke      test_unit
+        create        test/helpers/posts_helper_test.rb
+        invoke    assets
+        invoke      coffee
+        create        app/assets/javascripts/posts.js.coffee
+        invoke      scss
+        create        app/assets/stylesheets/posts.css.scss
+        invoke  resource_route
+         route    resources :posts
+      </pre>
+    </div>
+
+
+
+    <div class="slide">
+      <h1>Asociaciones</h1>
+      <h2>Belongs to</h2>
+      <div class="center"><img src="images/belongs_to.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>Asociaciones</h1>
+      <h2>Has One</h2>
+      <div class="center"><img src="images/has_one.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>Asociaciones</h1>
+      <h2>Has Many</h2>
+      <div class="center"><img src="images/has_many.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>Asociaciones</h1>
+      <h2>Has Many Through</h2>
+      <div class="center"><img src="images/has_many_through1.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>Asociaciones</h1>
+      <h2>Has Many Through</h2>
+      <div class="center"><img src="images/has_many_through2.png"></div>
+    </div>
+
+    <div class="slide">
+      <h1>Más información</h1>
+      <ul>
+        <li>Rails Guides<br />
+        <a href="http://guides.rubyonrails.org/" target='blank'>http://guides.rubyonrails.org/</a></li>
+        <li>RailsCasts<br />
+        <a href="http://railscasts.com/" target='blank'>http://railscasts.com/</a></li>
+        <li>Codecademy (Ruby)<br />
+        <a href="http://www.codecademy.com/tracks/ruby" target='blank'>http://www.codecademy.com/tracks/ruby</a></li>
+        <li>Rails for Zombies<br />
+        <a href="http://railsforzombies.org/" target='blank'>http://railsforzombies.org/</a></li>
+      </ul>
+    </div>
+  </body>
+</html>
